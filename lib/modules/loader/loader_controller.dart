@@ -12,10 +12,10 @@ class LoaderController extends GetxController {
   @override
   void onReady() {
     Future.delayed(const Duration(seconds: 1), () async {
-      // if (checkCache()) {
-      //   Get.offNamed(LoginPage.route);
-      //   return;
-      // }
+      if (checkCache()) {
+        Get.offNamed(LoginPage.route);
+        return;
+      }
 
       final LocationService locationService = LocationService();
       locationService.init();
