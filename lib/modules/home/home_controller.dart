@@ -16,9 +16,6 @@ class HomeController extends GetxController {
 
   @override
   void onReady() async {
-    _locationService.locationData.listen((event) {
-      currentLocation = Coordinate(lat: event.latitude!, lon: event.longitude!);
-    });
     await checkLocationCache();
     super.onReady();
   }
@@ -34,6 +31,9 @@ class HomeController extends GetxController {
 
     setLoading(true);
     _locationService.init();
+    await _locationService.locationData.first.then((event) {
+      currentLocation = Coordinate(lat: event.latitude!, lon: event.longitude!);
+    });
     await getWeather();
   }
 
