@@ -32,8 +32,8 @@ class HomeController extends GetxController {
 
     forecast = await api.getWeatherForecast(
       coordinate: Coordinate(
-        lat: locationData.latitude!,
-        lon: locationData.longitude!,
+        lat: coordinate?.lat ?? locationData.latitude!,
+        lon: coordinate?.lon ?? locationData.longitude!,
       ),
     );
 
