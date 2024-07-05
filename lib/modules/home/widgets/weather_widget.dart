@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
 import 'package:flutter_weather/models/weather_model.dart';
 import 'package:flutter_weather/modules/home/home_controller.dart';
 import 'package:flutter_weather/modules/home/widgets/search_widget.dart';
@@ -37,16 +36,8 @@ class WeatherWidget extends GetView<HomeController> {
               ),
               const Spacer(),
               IconButton(
-                // onPressed: () async {
-                //   final places = FlutterGooglePlacesSdk('AIzaSyAk9V4IpcLoliJTtKyhb5nSnS5EWcKarsE');
-                //   final predictions = await places.findAutocompletePredictions('Bandung');
-                //   print('Result: $predictions');
-
-                //   final getLocation = await places.fetchPlace('ChIJf0dSgjnmaC4RshXo05MfahQ', fields: [PlaceField.Location]);
-                //   print('Location: ${getLocation.place?.latLng}');
-                // },
                 onPressed: () {
-                  showModalBottomSheet(
+                  showModalBottomSheet<Coordinate>(
                     context: context,
                     isScrollControlled: true,
                     useSafeArea: true,
@@ -58,7 +49,11 @@ class WeatherWidget extends GetView<HomeController> {
                     builder: (context) {
                       return const SearchWidget();
                     },
-                  );
+                  ).then((value) {
+                    if (value != null) {
+                      controller.getWeather(coordinate: value);
+                    }
+                  });
                 },
                 icon: const Icon(
                   Icons.settings_outlined,

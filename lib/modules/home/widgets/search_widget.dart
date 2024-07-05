@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
+import 'package:flutter_weather/models/weather_model.dart';
+import 'package:get/get.dart';
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget({
@@ -59,8 +61,13 @@ class _SearchWidgetState extends State<SearchWidget> {
               return ListTile(
                 title: Text(item.primaryText),
                 subtitle: Text(item.secondaryText),
-                onTap: () {
-                  // TODO:
+                onTap: () async {
+                  await places.fetchPlace(item.placeId, fields: [PlaceField.Location]).then((value) {
+                    final LatLng? location = value.place?.latLng;
+                    if (location != null) {
+                      Get.back(result: Coordinate(lon: location.lng, lat: location.lat));
+                    }
+                  });
                 },
               );
             },

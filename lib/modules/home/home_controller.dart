@@ -18,15 +18,15 @@ class HomeController extends GetxController {
     super.onReady();
   }
 
-  Future<void> getWeather() async {
+  Future<void> getWeather({Coordinate? coordinate}) async {
     setLoading(true);
 
     final api = APIService();
     final LocationData locationData = _locationService.locationData;
     weather = await api.getWeather(
       coordinate: Coordinate(
-        lat: locationData.latitude!,
-        lon: locationData.longitude!,
+        lat: coordinate?.lat ?? locationData.latitude!,
+        lon: coordinate?.lon ?? locationData.longitude!,
       ),
     );
 
