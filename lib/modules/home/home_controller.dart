@@ -29,8 +29,6 @@ class HomeController extends GetxController {
         lon: locationData.longitude!,
       ),
     );
-    print('>>> Weather Data: $weather');
-    print('>>> Datetime: ${weather!.dateTime}');
 
     forecast = await api.getWeatherForecast(
       coordinate: Coordinate(
@@ -38,10 +36,6 @@ class HomeController extends GetxController {
         lon: locationData.longitude!,
       ),
     );
-
-    for (var element in forecast) {
-      print('>>> Forecast: ${element.dateTime}');
-    }
 
     setLoading(false);
   }
