@@ -69,10 +69,10 @@ class Weather {
 }
 
 class WeatherData {
-  final double temp;
-  final double feelsLike;
-  final double tempMin;
-  final double tempMax;
+  final num temp;
+  final num feelsLike;
+  final num tempMin;
+  final num tempMax;
   final int pressure;
   final int humidity;
   final int seaLevel;
