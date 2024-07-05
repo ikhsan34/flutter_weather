@@ -33,6 +33,10 @@ class LoaderPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
+            const Text(
+              'Getting your location, might take a while...',
+              style: TextStyle(color: Colors.white),
+            ),
             const LinearProgressIndicator(
               color: Colors.white,
               backgroundColor: Colors.white70,

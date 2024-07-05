@@ -9,8 +9,7 @@ class HomeController extends GetxController {
 
   @override
   void onReady() async {
-    await _locationService.initLocationService();
-    await getWeather();
+    // await getWeather();
     super.onReady();
   }
 
