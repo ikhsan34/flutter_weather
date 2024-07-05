@@ -5,7 +5,7 @@ class LoaderController extends GetxController {
   @override
   void onReady() {
     Future.delayed(const Duration(seconds: 2), () {
-      Get.offNamed(HomePage.route);
+      // Get.offNamed(HomePage.route);
     });
     super.onReady();
   }

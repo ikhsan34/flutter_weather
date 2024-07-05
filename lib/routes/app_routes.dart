@@ -6,7 +6,7 @@ import 'package:flutter_weather/modules/login/login_page.dart';
 import 'package:get/get.dart';
 
 class AppRoutes {
-  static const String initial = HomePage.route;
+  static const String initial = LoaderPage.route;
 
   static final routes = [
     GetPage(
