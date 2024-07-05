@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class WeatherIcon extends StatelessWidget {
@@ -10,9 +11,7 @@ class WeatherIcon extends StatelessWidget {
       return const Icon(Icons.error_outline);
     }
 
-    return Image(
-      image: NetworkImage('https://openweathermap.org/img/wn/${ParseIcon.getIcon(icon!)}@4x.png'),
-    );
+    return CachedNetworkImage(imageUrl: 'https://openweathermap.org/img/wn/${ParseIcon.getIcon(icon!)}@4x.png');
   }
 }
 

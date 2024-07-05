@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
 import 'package:flutter_weather/models/weather_model.dart';
 import 'package:flutter_weather/modules/home/home_controller.dart';
+import 'package:flutter_weather/modules/home/widgets/search_widget.dart';
 import 'package:flutter_weather/modules/home/widgets/weather_icon.dart';
 import 'package:flutter_weather/modules/login/login_page.dart';
 import 'package:flutter_weather/widgets/full_width_button.dart';
@@ -35,7 +37,29 @@ class WeatherWidget extends GetView<HomeController> {
               ),
               const Spacer(),
               IconButton(
-                onPressed: () {},
+                // onPressed: () async {
+                //   final places = FlutterGooglePlacesSdk('AIzaSyAk9V4IpcLoliJTtKyhb5nSnS5EWcKarsE');
+                //   final predictions = await places.findAutocompletePredictions('Bandung');
+                //   print('Result: $predictions');
+
+                //   final getLocation = await places.fetchPlace('ChIJf0dSgjnmaC4RshXo05MfahQ', fields: [PlaceField.Location]);
+                //   print('Location: ${getLocation.place?.latLng}');
+                // },
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    useSafeArea: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (context) {
+                      return const SearchWidget();
+                    },
+                  );
+                },
                 icon: const Icon(
                   Icons.settings_outlined,
                   color: Colors.white70,
