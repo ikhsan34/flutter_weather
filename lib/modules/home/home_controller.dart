@@ -23,11 +23,12 @@ class HomeController extends GetxController {
     if (box.read('last_location') != null && !isCacheExpired()) {
       final Coordinate lastLocation = Coordinate.fromJson(box.read('last_location'));
       await getWeather(coordinate: lastLocation);
+      _locationService.init();
       return;
     }
 
     setLoading(true);
-    await _locationService.initLocationService();
+    _locationService.init();
     await getWeather();
   }
 
@@ -49,6 +50,7 @@ class HomeController extends GetxController {
       ),
     );
 
+    _locationService.getLocation();
     setLoading(false);
   }
 

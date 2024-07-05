@@ -14,7 +14,7 @@ class LoaderController extends GetxController {
         return;
       }
       final LocationService locationService = LocationService();
-      await locationService.initLocationService();
+      locationService.init();
       if (locationService.serviceEnabled && locationService.permissionGranted == PermissionStatus.granted) {
         Get.offNamed(HomePage.route);
       } else {
