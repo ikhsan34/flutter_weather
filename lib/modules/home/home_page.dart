@@ -16,6 +16,29 @@ class HomePage extends GetView<HomeController> {
         child: Column(
           children: [
             const Spacer(),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 50),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.refresh_outlined,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.settings_outlined,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const Text(
               'Kota Bandung',
               style: TextStyle(
