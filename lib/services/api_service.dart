@@ -14,7 +14,7 @@ class APIService {
     final lon = coordinate.lon;
 
     try {
-      final response = await http.get(Uri.parse('$_url/weather?lat=$lat&lon=$lon&appid=$_apiKey'));
+      final response = await http.get(Uri.parse('$_url/weather?lat=$lat&lon=$lon&appid=$_apiKey&units=metric'));
       if (response.statusCode == 200) {
         return WeatherModel.fromJson(json.decode(response.body));
       } else {
@@ -32,7 +32,7 @@ class APIService {
     final lon = coordinate.lon;
 
     try {
-      final response = await http.get(Uri.parse('$_url/forecast?lat=$lat&lon=$lon&appid=$_apiKey'));
+      final response = await http.get(Uri.parse('$_url/forecast?lat=$lat&lon=$lon&appid=$_apiKey&units=metric'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         return (data['list'] as List).map((e) => WeatherModel.fromJson(e)).toList();

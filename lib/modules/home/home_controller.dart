@@ -7,26 +7,32 @@ import 'package:location/location.dart';
 class HomeController extends GetxController {
   final LocationService _locationService = LocationService();
 
+  WeatherModel? weather;
+  List<WeatherModel> forecast = [];
+
+  bool isLoading = false;
+
   @override
   void onReady() async {
-    // await getWeather();
+    await getWeather();
     super.onReady();
   }
 
   Future<void> getWeather() async {
+    setLoading(true);
+
     final api = APIService();
     final LocationData locationData = _locationService.locationData;
-    WeatherModel? weather = await api.getWeather(
+    weather = await api.getWeather(
       coordinate: Coordinate(
         lat: locationData.latitude!,
         lon: locationData.longitude!,
       ),
     );
-    print('>>> Location Data: ${_locationService.locationData}');
     print('>>> Weather Data: $weather');
     print('>>> Datetime: ${weather!.dateTime}');
 
-    List<WeatherModel> forecast = await api.getWeatherForecast(
+    forecast = await api.getWeatherForecast(
       coordinate: Coordinate(
         lat: locationData.latitude!,
         lon: locationData.longitude!,
@@ -36,5 +42,12 @@ class HomeController extends GetxController {
     for (var element in forecast) {
       print('>>> Forecast: ${element.dateTime}');
     }
+
+    setLoading(false);
+  }
+
+  void setLoading(bool value) {
+    isLoading = value;
+    update();
   }
 }
