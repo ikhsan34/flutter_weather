@@ -27,7 +27,7 @@ class WeatherWidget extends GetView<HomeController> {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.getWeather();
+                  controller.checkLocationCache();
                 },
                 icon: const Icon(
                   Icons.refresh_outlined,
@@ -56,7 +56,7 @@ class WeatherWidget extends GetView<HomeController> {
                   });
                 },
                 icon: const Icon(
-                  Icons.settings_outlined,
+                  Icons.location_on_outlined,
                   color: Colors.white70,
                 ),
               ),

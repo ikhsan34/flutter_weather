@@ -2,7 +2,7 @@ import 'package:flutter_weather/models/weather_model.dart';
 import 'package:flutter_weather/services/api_service.dart';
 import 'package:flutter_weather/services/location_service.dart';
 import 'package:get/get.dart';
-import 'package:location/location.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HomeController extends GetxController {
   final LocationService _locationService = LocationService();
@@ -14,26 +14,38 @@ class HomeController extends GetxController {
 
   @override
   void onReady() async {
-    await getWeather();
+    await checkLocationCache();
     super.onReady();
+  }
+
+  Future<void> checkLocationCache() async {
+    final box = GetStorage();
+    if (box.read('last_location') != null && !isCacheExpired()) {
+      final Coordinate lastLocation = Coordinate.fromJson(box.read('last_location'));
+      await getWeather(coordinate: lastLocation);
+      return;
+    }
+
+    setLoading(true);
+    await _locationService.initLocationService();
+    await getWeather();
   }
 
   Future<void> getWeather({Coordinate? coordinate}) async {
     setLoading(true);
 
     final api = APIService();
-    final LocationData locationData = _locationService.locationData;
     weather = await api.getWeather(
       coordinate: Coordinate(
-        lat: coordinate?.lat ?? locationData.latitude!,
-        lon: coordinate?.lon ?? locationData.longitude!,
+        lat: coordinate?.lat ?? _locationService.locationData.latitude!,
+        lon: coordinate?.lon ?? _locationService.locationData.longitude!,
       ),
     );
 
     forecast = await api.getWeatherForecast(
       coordinate: Coordinate(
-        lat: coordinate?.lat ?? locationData.latitude!,
-        lon: coordinate?.lon ?? locationData.longitude!,
+        lat: coordinate?.lat ?? _locationService.locationData.latitude!,
+        lon: coordinate?.lon ?? _locationService.locationData.longitude!,
       ),
     );
 
@@ -43,5 +55,12 @@ class HomeController extends GetxController {
   void setLoading(bool value) {
     isLoading = value;
     update();
+  }
+
+  bool isCacheExpired() {
+    final box = GetStorage();
+    if (box.read('location_timestamp') == null) return true;
+    final DateTime cachedTime = DateTime.fromMillisecondsSinceEpoch(box.read('location_timestamp'));
+    return DateTime.now().difference(cachedTime) > const Duration(minutes: 15);
   }
 }

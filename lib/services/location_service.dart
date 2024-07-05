@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'package:flutter_weather/models/weather_model.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:location/location.dart';
 
 class LocationService {
@@ -36,6 +38,19 @@ class LocationService {
     }
 
     _locationData = await location.getLocation();
+    writeCache();
+
     print('Location Data: $_locationData');
+  }
+
+  Future<void> writeCache() async {
+    final box = GetStorage();
+    final Coordinate coordinate = Coordinate(
+      lat: _locationData.latitude!,
+      lon: _locationData.longitude!,
+    );
+
+    box.write('last_location', coordinate.toJson());
+    box.write('location_timestamp', DateTime.now().millisecondsSinceEpoch);
   }
 }

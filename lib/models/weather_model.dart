@@ -43,6 +43,13 @@ class Coordinate {
       lat: json['lat'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'lon': lon,
+      'lat': lat,
+    };
+  }
 }
 
 class Weather {

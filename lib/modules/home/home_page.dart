@@ -15,6 +15,24 @@ class HomePage extends StatelessWidget {
         child: GetBuilder<HomeController>(
           builder: (controller) {
             if (controller.isLoading) {
+              if (controller.isCacheExpired()) {
+                return const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Getting your location, might take a while...',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      LinearProgressIndicator(
+                        color: Colors.white,
+                        backgroundColor: Colors.white70,
+                      )
+                    ],
+                  ),
+                );
+              }
+
               return const Center(
                 child: CircularProgressIndicator(
                   color: Colors.white70,
