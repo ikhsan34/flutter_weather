@@ -25,7 +25,9 @@ class WeatherWidget extends GetView<HomeController> {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  controller.getWeather();
+                },
                 icon: const Icon(
                   Icons.refresh_outlined,
                   color: Colors.white70,
