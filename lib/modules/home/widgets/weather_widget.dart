@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/models/weather_model.dart';
 import 'package:flutter_weather/modules/home/home_controller.dart';
+import 'package:flutter_weather/modules/home/widgets/weather_icon.dart';
 import 'package:flutter_weather/modules/login/login_page.dart';
 import 'package:flutter_weather/widgets/full_width_button.dart';
 import 'package:get/get.dart';
@@ -77,7 +78,7 @@ class WeatherWidget extends GetView<HomeController> {
                 ),
               ),
             ),
-            const Image(image: NetworkImage('https://openweathermap.org/img/wn/10d@4x.png')),
+            WeatherIcon(icon: weather?.weather[0].icon ?? ''),
           ],
         ),
         const SizedBox(height: 50),
@@ -101,9 +102,7 @@ class WeatherWidget extends GetView<HomeController> {
                   WeatherModel item = forecast[index];
                   return Column(
                     children: [
-                      const Image(
-                        image: NetworkImage('https://openweathermap.org/img/wn/10d@2x.png'),
-                      ),
+                      WeatherIcon(icon: item.weather[0].icon),
                       Text(
                         '${item.dateTime.hour}:00',
                         style: const TextStyle(
