@@ -10,10 +10,15 @@ class HomeController extends GetxController {
   WeatherModel? weather;
   List<WeatherModel> forecast = [];
 
+  late Coordinate currentLocation;
+
   bool isLoading = false;
 
   @override
   void onReady() async {
+    _locationService.locationData.listen((event) {
+      currentLocation = Coordinate(lat: event.latitude!, lon: event.longitude!);
+    });
     await checkLocationCache();
     super.onReady();
   }
@@ -38,15 +43,15 @@ class HomeController extends GetxController {
     final api = APIService();
     weather = await api.getWeather(
       coordinate: Coordinate(
-        lat: coordinate?.lat ?? _locationService.locationData.latitude!,
-        lon: coordinate?.lon ?? _locationService.locationData.longitude!,
+        lat: coordinate?.lat ?? currentLocation.lat,
+        lon: coordinate?.lon ?? currentLocation.lon,
       ),
     );
 
     forecast = await api.getWeatherForecast(
       coordinate: Coordinate(
-        lat: coordinate?.lat ?? _locationService.locationData.latitude!,
-        lon: coordinate?.lon ?? _locationService.locationData.longitude!,
+        lat: coordinate?.lat ?? currentLocation.lat,
+        lon: coordinate?.lon ?? currentLocation.lon,
       ),
     );
 

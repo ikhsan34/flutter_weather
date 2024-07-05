@@ -28,7 +28,9 @@ class LocationService {
 
   late bool serviceEnabled;
   late PermissionStatus permissionGranted;
-  late LocationData locationData;
+
+  final StreamController<LocationData> _dataController = StreamController.broadcast();
+  Stream<LocationData> get locationData => _dataController.stream;
 
   final LocationWorker worker = LocationWorker();
   final ReceivePort _receivePort = ReceivePort();
@@ -59,8 +61,8 @@ class LocationService {
         final List<Object> data = args.data!;
         serviceEnabled = data[0] as bool;
         permissionGranted = data[1] as PermissionStatus;
-        locationData = data[2] as LocationData;
-        print('Data >>> ${locationData.latitude}, ${locationData.longitude}');
+        _dataController.add(data[2] as LocationData);
+        print('Location Data: ${data[2]}');
         break;
       default:
     }

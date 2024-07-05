@@ -11,7 +11,10 @@ class WeatherIcon extends StatelessWidget {
       return const Icon(Icons.error_outline);
     }
 
-    return CachedNetworkImage(imageUrl: 'https://openweathermap.org/img/wn/${ParseIcon.getIcon(icon!)}@4x.png');
+    return CachedNetworkImage(
+      placeholder: (context, url) => const CircularProgressIndicator(),
+      imageUrl: 'https://openweathermap.org/img/wn/${ParseIcon.getIcon(icon!)}@4x.png',
+    );
   }
 }
 
