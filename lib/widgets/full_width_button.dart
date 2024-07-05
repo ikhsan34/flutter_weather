@@ -19,6 +19,7 @@ class FullWidthButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
+          elevation: const MaterialStatePropertyAll(20),
           foregroundColor: MaterialStatePropertyAll(color),
           maximumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
           shape: MaterialStatePropertyAll(
