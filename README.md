@@ -3,6 +3,7 @@
 Weather App using Flutter and OpenWeatherAPI 
 
 ### Implemented
+- Detect location using GPS
 - Search places from Google Places API
 - Getx State management
 - Get storage for cache
