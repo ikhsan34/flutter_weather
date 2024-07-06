@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/models/weather_model.dart';
 import 'package:flutter_weather/modules/login/login_page.dart';
@@ -20,11 +21,58 @@ class LoaderController extends GetxController {
       final LocationService locationService = LocationService();
       locationService.init();
 
-      await locationService.locationData.first.then((locationData) {
+      locationService.locationData.first.then((locationData) {
         final box = GetStorage();
         final Coordinate coordinate = Coordinate(lat: locationData.latitude!, lon: locationData.longitude!);
         box.write('last_location', coordinate.toJson());
       });
+
+      while (locationService.permissionGranted == null) {
+        print('Waiting for initializing...');
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+
+      while (locationService.permissionGranted != PermissionStatus.granted) {
+        print('Waiting for location permission...');
+
+        await Future.delayed(const Duration(seconds: 1));
+        await showDialog(
+          context: Get.context!,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Location Permission'),
+              content: const Text('Please allow location permission to continue.'),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    await AppSettings.openAppSettings(
+                      type: AppSettingsType.location,
+                      // asAnotherTask: true,
+                    );
+
+                    await Future.delayed(const Duration(seconds: 3));
+
+                    while (Get.engine.lifecycleState != AppLifecycleState.resumed) {
+                      print('AppState: ${Get.engine.lifecycleState}');
+                      await Future.delayed(const Duration(milliseconds: 500));
+                    }
+
+                    Get.back();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+
+        locationService.permissionGranted = null;
+        locationService.requestPermission();
+        while (locationService.permissionGranted == null) {
+          print('Waiting for reinitializing...');
+          await Future.delayed(const Duration(milliseconds: 500));
+        }
+      }
 
       if (locationService.serviceEnabled && locationService.permissionGranted == PermissionStatus.granted) {
         Get.offNamed(LoginPage.route);

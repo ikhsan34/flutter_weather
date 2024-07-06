@@ -15,7 +15,7 @@ enum COMMAND {
 
 class CommandArgs {
   final COMMAND command;
-  final List<Object>? data;
+  final List<Object?>? data;
   final SendPort? sendPort;
 
   CommandArgs(this.command, this.sendPort, this.data);
@@ -27,7 +27,7 @@ class LocationService {
   factory LocationService() => _instance;
 
   late bool serviceEnabled;
-  late PermissionStatus permissionGranted;
+  PermissionStatus? permissionGranted;
 
   final StreamController<LocationData> _dataController = StreamController.broadcast();
   Stream<LocationData> get locationData => _dataController.stream;
@@ -51,6 +51,10 @@ class LocationService {
     });
   }
 
+  void requestPermission() {
+    worker.runCommand(CommandArgs(COMMAND.init, _receivePort.sendPort, null));
+  }
+
   void getLocation() {
     worker.runCommand(CommandArgs(COMMAND.getLocation, _receivePort.sendPort, null));
   }
@@ -58,13 +62,15 @@ class LocationService {
   void _handleCommand(CommandArgs args) {
     switch (args.command) {
       case COMMAND.result:
-        final List<Object> data = args.data!;
+        final List<Object?> data = args.data!;
         serviceEnabled = data[0] as bool;
         permissionGranted = data[1] as PermissionStatus;
-        _dataController.add(data[2] as LocationData);
+        if (data[2] != null) _dataController.add(data[2] as LocationData);
+        // _dataController.add(data[2] as LocationData);
         print('Location Data: ${data[2]}');
         break;
       default:
+        break;
     }
   }
 }
@@ -73,7 +79,7 @@ class LocationWorker {
   final Location location = Location();
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
-  late LocationData _locationData;
+  LocationData? _locationData;
 
   late SendPort _sendPort;
   final Completer<void> isolateReady = Completer.sync();
@@ -110,6 +116,7 @@ class LocationWorker {
         await _initLocationService();
         args.sendPort!.send(CommandArgs(COMMAND.result, null, [_serviceEnabled, _permissionGranted, _locationData]));
         break;
+
       case COMMAND.getLocation:
         _locationData = await location.getLocation();
         args.sendPort!.send(CommandArgs(COMMAND.result, null, [_serviceEnabled, _permissionGranted, _locationData]));
@@ -138,16 +145,16 @@ class LocationWorker {
     }
 
     _locationData = await location.getLocation();
-    writeCache();
+    _writeCache();
 
     print('Location Data: $_locationData');
   }
 
-  Future<void> writeCache() async {
+  Future<void> _writeCache() async {
     final box = GetStorage();
     final Coordinate coordinate = Coordinate(
-      lat: _locationData.latitude!,
-      lon: _locationData.longitude!,
+      lat: _locationData!.latitude!,
+      lon: _locationData!.longitude!,
     );
 
     box.write('last_location', coordinate.toJson());
