@@ -114,11 +114,11 @@ class LocationWorker {
     switch (args.command) {
       case COMMAND.init:
         await _initLocationService();
-        args.sendPort!.send(CommandArgs(COMMAND.result, null, [_serviceEnabled, _permissionGranted, _locationData]));
+        args.sendPort!.send(CommandArgs(COMMAND.result, null, [_serviceEnabled, _permissionGranted, null]));
         break;
 
       case COMMAND.getLocation:
-        _locationData = await location.getLocation();
+        await _getLocation();
         args.sendPort!.send(CommandArgs(COMMAND.result, null, [_serviceEnabled, _permissionGranted, _locationData]));
         break;
       default:
@@ -143,10 +143,11 @@ class LocationWorker {
         return;
       }
     }
+  }
 
+  Future<void> _getLocation() async {
     _locationData = await location.getLocation();
     _writeCache();
-
     print('Location Data: $_locationData');
   }
 

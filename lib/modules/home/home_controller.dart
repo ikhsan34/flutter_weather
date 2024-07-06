@@ -25,12 +25,12 @@ class HomeController extends GetxController {
     if (box.read('last_location') != null && !isCacheExpired()) {
       final Coordinate lastLocation = Coordinate.fromJson(box.read('last_location'));
       await getWeather(coordinate: lastLocation);
-      _locationService.init();
+      _locationService.getLocation();
       return;
     }
 
     setLoading(true);
-    _locationService.init();
+    _locationService.getLocation();
     await _locationService.locationData.first.then((event) {
       currentLocation = Coordinate(lat: event.latitude!, lon: event.longitude!);
     });
