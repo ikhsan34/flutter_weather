@@ -55,7 +55,7 @@ class _SearchWidgetState extends State<SearchWidget> {
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: predictions.predictions.length,
+            itemCount: predictions.predictions.sublist(0, predictions.predictions.length > 4 ? 4 : predictions.predictions.length).length,
             itemBuilder: (context, index) {
               final AutocompletePrediction item = predictions.predictions[index];
               return ListTile(
