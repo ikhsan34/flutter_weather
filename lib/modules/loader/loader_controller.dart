@@ -16,13 +16,6 @@ class LoaderController extends GetxController {
     final LocationService locationService = LocationService();
     locationService.init();
 
-    locationService.locationData.first.then((locationData) {
-      final box = GetStorage();
-      if (box.read('last_location') == null) {
-        Get.offNamed(LoginPage.route);
-      }
-    });
-
     while (locationService.permissionGranted == null) {
       print('Waiting for initializing...');
       await Future.delayed(const Duration(milliseconds: 500));
@@ -68,12 +61,15 @@ class LoaderController extends GetxController {
     }
 
     if (locationService.serviceEnabled && locationService.permissionGranted == PermissionStatus.granted) {
-      if (checkCache()) {
-        Get.offNamed(LoginPage.route);
+      if (!checkCache()) {
+        locationService.getLocation();
+        locationService.locationData.first.then((locationData) {
+          Get.offNamed(LoginPage.route);
+        });
         return;
       }
 
-      locationService.getLocation();
+      Get.offNamed(LoginPage.route);
     } else {
       Get.snackbar(
         'Error',
